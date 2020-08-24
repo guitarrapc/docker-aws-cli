@@ -1,6 +1,6 @@
 FROM docker
 
-LABEL tools="docker-image, gitlab-aws, aws, helm, helm-charts, docker, gitlab, gitlab-ci, kubectl, s3, aws-iam-authenticator, ecr, bash, envsubst, alpine, curl, python3, pip3, git"
+LABEL tools="docker-image, gitlab-aws, aws, helm, helm-charts, docker, kubectl, aws-iam-authenticator, sops, kubeval, ecr, bash, alpine, curl, python3, pip3, git"
 # version is kubectl version
 LABEL version="1.17.9"
 LABEL description="An Alpine based docker image contains a good combination of commenly used tools\
