@@ -8,6 +8,7 @@ on:
 env:
   OWNER: guitarrapc
   IMAGE_NAME: docker-awscli-kubectl
+  DOCKER_BUILDKIT: 1
 
 jobs:
   build:
