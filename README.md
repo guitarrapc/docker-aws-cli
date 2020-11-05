@@ -19,7 +19,6 @@ other tools will be updated on kubectl update time.
 |AWS CLI                |2.0.30         |AWS commandline tools for managing simple infrastructure tasks                            |
 |cUrl                   |7.67.0         |Commandline professional http(s) client tool                                              |
 |Bash                   |4.4.19         |Advanced linux shell                                                                      |
-|aws-iam-authenticator  |1.17.9         |IAM authentication utility offers a secure proxy for authenticating kubectl to K8S cluster|
 |Kubectl                |1.17.9         |Kubectl used to administrate the K8S cluster                                              |
 |git                    |2.24.1         |World's most popular version control tool                                                 |
 |helm                   |3.3.0          |Package manager for K8S clusters that simplifies complex deployments with simple Charts   |
