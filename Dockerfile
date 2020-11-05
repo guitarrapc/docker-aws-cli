@@ -1,17 +1,18 @@
 FROM docker
 
-LABEL tools="docker-image, gitlab-aws, aws, helm, helm-charts, docker, kubectl, aws-iam-authenticator, sops, kubeval, ecr, bash, alpine, curl, python3, pip3, git"
+LABEL tools="docker-image, gitlab-aws, aws, helm, helm-charts, docker, kubectl, aws-iam-authenticator, sops, kubeval, ecr, bash, alpine, curl, git"
 # version is kubectl version
 LABEL version="1.17.9"
 LABEL description="An Alpine based docker image contains a good combination of commenly used tools\
     to build, package as docker image, login and push to AWS ECR, AWS authentication and all Kuberentes staff. \
-    tools included: Docker, AWS-CLI, Kubectl, Helm, Curl, Python, Python, Pip, Git, Bash, AWS-IAM-Auth."
+    tools included: Docker, AWS-CLI, Kubectl, Helm, Curl, Git, Bash, AWS-IAM-Auth."
 LABEL maintainer="eng.ahmed.srour@gmail.com, 3856350+guitarrapc@users.noreply.github.com"
 
 # https://docs.aws.amazon.com/eks/latest/userguide/install-kubectl.html
-ENV AWS_CLI_VERSION="1.18.31" \
+ENV AWS_CLI_VERSION="2.0.30" \
     AWS_IAM_AUTHENTICATOR_VERSION="1.17.9" \
     AWS_IAM_AUTHENTICATOR_DATE="2020-08-04" \
+    GLIBC_VERSION="2.31-r0" \
     KUBECTL_VERSION="1.17.9" \
     KUBECTL_DATE="2020-08-04" \
     HELM_VERSION="3.3.0" \
@@ -21,25 +22,28 @@ ENV AWS_CLI_VERSION="1.18.31" \
     SOPS_VERSION="3.6.0"
 
 RUN set -x && \
-    apk add --no-cache python3 && \
-    python3 -m ensurepip && \
-    rm -r /usr/lib/python*/ensurepip && \
-    pip3 install --upgrade pip setuptools && \
-    if [ ! -e /usr/bin/pip ]; then ln -s pip3 /usr/bin/pip ; fi && \
-    if [[ ! -e /usr/bin/python ]]; then ln -sf /usr/bin/python3 /usr/bin/python; fi && \
-    rm -r /root/.cache
-# additionally required by docker-compose:
-# python3-dev libffi-dev openssl-dev gcc libc-dev make
-
-RUN set -x && \
     apk --no-cache update && \
-    apk --no-cache add curl jq make bash ca-certificates groff less git openssh-client && \
-    pip3 install --upgrade awscli urllib3 && \
-    pip3 --no-cache-dir install awscli==${AWS_CLI_VERSION} && \
+    apk --no-cache add curl binutils jq make bash ca-certificates groff less git openssh-client && \
     rm -rf /var/cache/apk/*
 
-# omit docker-compose. don't need without dind, let's remove in this fork.
-# RUN pip3 --no-cache-dir install docker-compose 
+WORKDIR /tmp
+
+# install glibc to alpine https://stackoverflow.com/questions/60298619/awscli-version-2-on-alpine-linux/61268529#61268529
+RUN curl -sL https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub -o /etc/apk/keys/sgerrand.rsa.pub && \
+    curl -sLO https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/glibc-${GLIBC_VERSION}.apk && \
+    curl -sLO https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/glibc-bin-${GLIBC_VERSION}.apk && \
+    apk add --no-cache glibc-${GLIBC_VERSION}.apk glibc-bin-${GLIBC_VERSION}.apk && \
+    rm -rf /var/cache/apk/* && \
+    rm ./glibc-${GLIBC_VERSION}.apk && \
+    rm ./glibc-bin-${GLIBC_VERSION}.apk
+
+RUN curl -s "https://awscli.amazonaws.com/awscli-exe-linux-x86_64-${AWS_CLI_VERSION}.zip" -o "awscliv2.zip" && \
+    unzip awscliv2.zip && \
+    ./aws/install && \
+    rm ./awscliv2.zip && \
+    rm -rf ./aws
+
+WORKDIR /
 
 RUN curl -sL https://github.com/jwilder/dockerize/releases/download/v$DOCKERIZE_VERSION/dockerize-alpine-linux-amd64-v${DOCKERIZE_VERSION}.tar.gz -o dockerize-alpine-linux-amd64.tar.gz \
     && tar -C /usr/local/bin -xzvf dockerize-alpine-linux-amd64.tar.gz \
@@ -57,9 +61,6 @@ RUN curl -sL https://github.com/garethr/kubeval/releases/download/${KUBEVAL_VERS
 
 RUN curl -sL https://github.com/mozilla/sops/releases/download/v${SOPS_VERSION}/sops-v${SOPS_VERSION}.linux -o /usr/local/bin/sops \
     && chmod +x /usr/local/bin/sops
-
-# Install GIT
-RUN apk add --no-cache git
 
 #ENV HELM_HOME=~/.helm
 #RUN mkdir -p ~/.helm/plugins

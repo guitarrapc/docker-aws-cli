@@ -21,9 +21,7 @@ other tools will be updated on kubectl update time.
 |Tool                   |Version        |Description                                                                               |
 |-----------------------|---------------|------------------------------------------------------------------------------------------|
 |Docker Engine          |18.6           |Docker image containing docker engine to offer Docker inside Docker (DinD)                |
-|AWS CLI                |1.18.24        |AWS commandline tools for managing simple infrastructure tasks                            |
-|Python                 |3.8.2          |Usefull scripting language and also a common rerequisite for many other tools             |
-|Pip                    |19.2.3         |Python package manager used to install many libraries and other tools i.e. aws-cli        |
+|AWS CLI                |2.0.30         |AWS commandline tools for managing simple infrastructure tasks                            |
 |cUrl                   |7.67.0         |Commandline professional http(s) client tool                                              |
 |Bash                   |4.4.19         |Advanced linux shell                                                                      |
 |aws-iam-authenticator  |1.17.9         |IAM authentication utility offers a secure proxy for authenticating kubectl to K8S cluster|
