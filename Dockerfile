@@ -11,13 +11,13 @@ LABEL maintainer="eng.ahmed.srour@gmail.com, 3856350+guitarrapc@users.noreply.gi
 # https://docs.aws.amazon.com/eks/latest/userguide/install-kubectl.html
 ENV AWS_CLI_VERSION="2.0.30" \
     GLIBC_VERSION="2.31-r0" \
-    KUBECTL_VERSION="1.17.9" \
-    KUBECTL_DATE="2020-08-04" \
-    HELM_VERSION="3.3.0" \
-    HELM_S3_VERSION="0.9.2" \
+    KUBECTL_VERSION="1.18.8" \
+    KUBECTL_DATE="2020-09-18" \
+    HELM_VERSION="3.4.0" \
+    HELM_S3_VERSION="0.10.0" \
     KUBEVAL_VERSION="0.15.0" \
     DOCKERIZE_VERSION="0.6.1" \
-    SOPS_VERSION="3.6.0"
+    SOPS_VERSION="3.6.1"
 
 RUN set -x && \
     apk --no-cache update && \
