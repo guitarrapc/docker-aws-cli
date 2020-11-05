@@ -24,13 +24,13 @@ other tools will be updated on kubectl update time.
 |AWS CLI                |2.0.30         |AWS commandline tools for managing simple infrastructure tasks                            |
 |cUrl                   |7.67.0         |Commandline professional http(s) client tool                                              |
 |Bash                   |4.4.19         |Advanced linux shell                                                                      |
-|Kubectl                |1.17.9         |Kubectl used to administrate the K8S cluster                                              |
+|Kubectl                |1.18.8         |Kubectl used to administrate the K8S cluster                                              |
 |git                    |2.24.1         |World's most popular version control tool                                                 |
-|helm                   |3.3.0          |Package manager for K8S clusters that simplifies complex deployments with simple Charts   |
-|helm-s3 plugin         |0.9.2          |S3 integration plugin to use S3 as a private Helm Charts repositories                     |
+|helm                   |3.4.0          |Package manager for K8S clusters that simplifies complex deployments with simple Charts   |
+|helm-s3 plugin         |0.10.0         |S3 integration plugin to use S3 as a private Helm Charts repositories                     |
 |kubeval                |0.15.0         |Validate your Kubernetes configuration files, supports multiple Kubernetes versions       |
 |dockerize              |0.6.1          |Utility to simplify running applications in docker containers                             |
-|sops                   |3.6.0          |Simple and flexible tool for managing secrets                                             |
+|sops                   |3.6.1          |Simple and flexible tool for managing secrets                                             |
 
 ## Installation guide
 
