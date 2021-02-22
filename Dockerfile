@@ -9,11 +9,11 @@ LABEL description="An Alpine based docker image contains a good combination of c
 LABEL maintainer="eng.ahmed.srour@gmail.com, 3856350+guitarrapc@users.noreply.github.com"
 
 # https://docs.aws.amazon.com/eks/latest/userguide/install-kubectl.html
-ENV AWS_CLI_VERSION="2.0.30" \
+ENV AWS_CLI_VERSION="2.1.27" \
     GLIBC_VERSION="2.31-r0" \
-    KUBECTL_VERSION="1.18.8" \
-    KUBECTL_DATE="2020-09-18" \
-    HELM_VERSION="3.4.0" \
+    KUBECTL_VERSION="1.19.6" \
+    KUBECTL_DATE="2021-01-05" \
+    HELM_VERSION="3.5.2" \
     HELM_S3_VERSION="0.10.0" \
     KUBEVAL_VERSION="0.15.0" \
     DOCKERIZE_VERSION="0.6.1" \
