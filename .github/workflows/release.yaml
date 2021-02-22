@@ -1,4 +1,4 @@
-name: Docker Push
+name: release
 
 on:
   workflow_dispatch:
@@ -19,10 +19,11 @@ env:
   DRY_RUN: ${{ github.event.inputs.dry_run }}
 
 jobs:
-  build:
+  build-release:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      # docker
       - run: docker build --build-arg VCS_REF=$(git rev-parse --short HEAD) -t ${OWNER}/${IMAGE_NAME}:latest .
       - run: docker tag ${OWNER}/${IMAGE_NAME}:latest ${OWNER}/${IMAGE_NAME}:${GIT_TAG}
       - run: docker login -u ${DOCKER_USER} -p ${DOCKER_PASS}
@@ -33,6 +34,7 @@ jobs:
         if: github.event.inputs.dry_run == 'false'
       - run: docker push ${OWNER}/${IMAGE_NAME}:${GIT_TAG}
         if: github.event.inputs.dry_run == 'false'
+      # tag
       - run: git tag ${{ env.GIT_TAG }}
         if: github.event.inputs.dry_run == 'false'
       - name: Push changes
@@ -42,6 +44,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ github.ref }}
           tags: true
+      # release
       - uses: actions/create-release@v1
         if: github.event.inputs.dry_run == 'false'
         id: create_release
