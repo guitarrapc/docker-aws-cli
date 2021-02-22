@@ -1,20 +1,27 @@
 name: Docker Push
 
 on:
-  push:
-    tags:
-      - "[0-9]+.[0-9]+.[0-9]+*" # only tag with pattern match
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "tag: git tag you want create. (sample 1.0.0)"
+        required: true
+      dry_run:
+        description: "dry_run: true will never create release/nuget."
+        required: true
+        default: "false"
 
 env:
   OWNER: guitarrapc
   IMAGE_NAME: docker-awscli-kubectl
   DOCKER_BUILDKIT: 1
+  GIT_TAG: ${{ github.event.inputs.tag }}
+  DRY_RUN: ${{ github.event.inputs.dry_run }}
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "GIT_TAG=${GITHUB_REF#refs/tags/}" > $GITHUB_ENV
       - uses: actions/checkout@v2
       - run: docker build --build-arg VCS_REF=$(git rev-parse --short HEAD) -t ${OWNER}/${IMAGE_NAME}:latest .
       - run: docker tag ${OWNER}/${IMAGE_NAME}:latest ${OWNER}/${IMAGE_NAME}:${GIT_TAG}
@@ -23,4 +30,25 @@ jobs:
           DOCKER_USER: ${{ secrets.SYNCED_DOCKER_USER }}
           DOCKER_PASS: ${{ secrets.SYNCED_DOCKER_PASS }}
       - run: docker push ${OWNER}/${IMAGE_NAME}
-      - run: docker push ${OWNER}/${IMAGE_NAME}:${GITHUB_ENV}
+        if: github.event.inputs.dry_run == 'false'
+      - run: docker push ${OWNER}/${IMAGE_NAME}:${GIT_TAG}
+        if: github.event.inputs.dry_run == 'false'
+      - run: git tag ${{ env.GIT_TAG }}
+        if: github.event.inputs.dry_run == 'false'
+      - name: Push changes
+        if: github.event.inputs.dry_run == 'false'
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
+          tags: true
+      - uses: actions/create-release@v1
+        if: github.event.inputs.dry_run == 'false'
+        id: create_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ env.GIT_TAG }}
+          release_name: ${{ env.GIT_TAG }}
+          draft: true
+          prerelease: false
